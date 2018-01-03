@@ -1,0 +1,23 @@
+# check open sessions on windows machines in network range
+# of course not all machines are windows :)
+$network = "xxx.xxx"
+$subnets = yyy1,yyy2
+
+$outputfile="c:\temp\sessions.txt"
+echo "" > $outputfile
+
+foreach ($subnet in $subnets) {
+	$start = 2
+	$end = 254
+	while ($start -le $end) {
+			$IP = "$network.$subnet.$start"
+			$serverexists=Resolve-DnsName $IP -type ptr -quicktimeout
+			if ($serverexists) {
+				Write-Host "checking $IP" -ForegroundColor Cyan
+				qwinsta /server:$IP >> $outputfile
+			} else {
+				Write-Host "no server for $IP" -ForegroundColor Yellow
+			}
+			$start++
+	}	
+}
