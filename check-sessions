@@ -11,8 +11,8 @@ foreach ($subnet in $subnets) {
 	$end = 254
 	while ($start -le $end) {
 			$IP = "$network.$subnet.$start"
-			$serverexists=Resolve-DnsName $IP -type ptr -quicktimeout
-			if ($serverexists) {
+			$online=Test-Connection -ComputerName $IP -Quiet -Count 1
+			if ($online) {
 				Write-Host "checking $IP" -ForegroundColor Cyan
 				qwinsta /server:$IP >> $outputfile
 			} else {
